@@ -25,7 +25,7 @@ public class Usuario {
 	@Column(name = "email", length = 50, nullable = true)
 	private String email;
 	
-	@Column(name = "senha", columnDefinition = "TEXT", nullable = true, insertable = false, updatable = false)
+	@Column(name = "senha", columnDefinition = "TEXT", nullable = true)
 	private String senha;
 	
 	@Column(name = "telefone", length = 15, nullable = true)
