@@ -3,7 +3,10 @@ package br.com.criandoapi.projeto.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +20,10 @@ import br.com.criandoapi.projeto.DAO.IUsuario;
 import br.com.criandoapi.projeto.model.Usuario;
 
 @RequestMapping("/usuarios")
+@CrossOrigin("*") /*
+	Desbloqueio de portas usando localhost, pode ter problemas ao mandar 
+	requisições de uma porta para outra
+*/
 @RestController
 public class UsuarioController {
 	
@@ -24,27 +31,27 @@ public class UsuarioController {
 	private IUsuario dao;
 	
 	@GetMapping
-	public List<Usuario> listaUsuarios () {
-		return (List<Usuario>) dao.findAll();
+	public ResponseEntity<List<Usuario>> listaUsuarios () { //Usando ResponseEntity
+		List<Usuario> lista = (List<Usuario>) dao.findAll();
+		return ResponseEntity.status(200).body(lista);
 	}
 
 	@PostMapping
-	public Usuario criarUsuario (@RequestBody Usuario usuario) {
+	public ResponseEntity<Usuario> criarUsuario (@RequestBody Usuario usuario) {
 		Usuario usuarioNovo = dao.save(usuario);
-		return usuarioNovo;
+		return ResponseEntity.status(201).body(usuarioNovo);
 	}
 
 	@PutMapping
-	public Usuario atualizarUsuario (@RequestBody Usuario usuario) {
+	public ResponseEntity<Usuario> atualizarUsuario (@RequestBody Usuario usuario) {
 		Usuario usuarioAlterado = dao.save(usuario);
-		return usuarioAlterado;
+		return ResponseEntity.status(200).body(usuarioAlterado);
 	}
 
 	@DeleteMapping("/{id}")
-	public Optional<Usuario> deleteUsuario (@PathVariable Integer id) {
-		Optional<Usuario> usuarioDeletado = dao.findById(id);
+	public ResponseEntity<?> deleteUsuario (@PathVariable Integer id) {
 		dao.deleteById(id);
-		return usuarioDeletado;
+		return ResponseEntity.status(204).build();
 	}
 
 	
